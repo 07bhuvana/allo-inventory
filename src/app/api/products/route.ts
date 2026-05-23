@@ -4,14 +4,16 @@ import { releaseExpiredReservations } from '@/lib/expiry';
 
 export async function GET() {
   try {
-    // Lazy cleanup: release expired reservations before computing available stock
+    // Lazy cleanup: release expired reservations before computing stock
     await releaseExpiredReservations();
 
     const products = await prisma.product.findMany({
       orderBy: { name: 'asc' },
       include: {
         stockLevels: {
-          include: { warehouse: true },
+          include: {
+            warehouse: true,
+          },
         },
       },
     });
@@ -37,6 +39,10 @@ export async function GET() {
     return NextResponse.json({ products: result });
   } catch (error) {
     console.error('[GET /api/products]', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

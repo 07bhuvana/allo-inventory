@@ -371,7 +371,7 @@ export default function ProductsPage() {
   useEffect(() => {
     fetchProducts();
     // Refresh stock every 30 seconds
-    const interval = setInterval(fetchProducts, 30_000);
+    const interval = setInterval(fetchProducts, 3000);
     return () => clearInterval(interval);
   }, [fetchProducts]);
 
